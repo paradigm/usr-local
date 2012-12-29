@@ -4,3 +4,6 @@
 [submodule "src/sxiv"]
 	path = src/sxiv
 	url = https://github.com/paradigm/sxiv
+[submodule "src/paraPDF"]
+	path = src/paraPDF
+	url = https://github.com/paradigm/paraPDF.git
