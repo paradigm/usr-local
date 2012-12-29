@@ -1,0 +1,15 @@
+#!/bin/sh
+WIDTH=$(xrandr | awk '/\*/{print$1}' | awk -Fx '{print$1;exit}')
+HEIGHT=$(xrandr | awk '/\*/{print$1}' | awk -Fx '{print$2;exit}')
+#DEVICE=$( (xinput list | grep "Mouse" || xinput list | grep "Synaptics" || xinput list | grep "<default pointer>") | cut -d'=' -f2 | cut -d'	' -f1)
+DEVICE=$(xinput list | awk -F= '/Mouse/||/Synaptics/||/<default pointer>/{print$2;exit}' | cut -d'	' -f1)
+PROP=$(xinput list-props $DEVICE | awk '/Device Enabled/{print$3}' | sed 's/^.\(.*\)):$/\1/')
+STATUS=$(xinput list-props $DEVICE | awk '/Device Enabled/{print$4}')
+if [ "$STATUS" -eq 1 ]
+then
+	swarp $WIDTH $HEIGHT
+	xinput set-prop $DEVICE $PROP 0
+else
+	swarp $(expr $WIDTH / 2 ) $(expr $HEIGHT / 2 )
+	xinput set-prop $DEVICE $PROP 1
+fi
