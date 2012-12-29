@@ -1,0 +1,6 @@
+#!/bin/sh
+ps -A | awk '
+$4 == "mpd" {system("ncmpcpp next");exit}
+$4 == "mocp" {system("mocp --next");exit}
+$4 == "pianobar" {system("echo 'n' > $HOME/.config/pianobar/ctl");exit}
+' 2>/dev/null

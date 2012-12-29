@@ -1,0 +1,6 @@
+#!/bin/sh
+ps -A | awk '
+$4 == "mpd" {system("ncmpcpp prev");exit}
+$4 == "mocp" {system("mocp --previous");exit}
+# pianobar cant previous
+' 2>/dev/null

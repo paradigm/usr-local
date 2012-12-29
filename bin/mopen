@@ -1,0 +1,6 @@
+#!/bin/sh
+ps -A | awk '
+$4 == "mpd" {system("uxterm -e ncmpcpp"); exit}
+$4 == "mocp" {system("uxterm -e mocp"); exit}
+$4 == "pianobar" {system("uxterm -e headless_pianobar"); exit}
+' 2>/dev/null
