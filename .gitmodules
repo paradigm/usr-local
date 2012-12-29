@@ -10,3 +10,6 @@
 [submodule "src/slock"]
 	path = src/slock
 	url = http://git.suckless.org/slock
+[submodule "src/dmenu"]
+	path = src/dmenu
+	url = git://git.suckless.org/dmenu
