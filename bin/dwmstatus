@@ -1,0 +1,17 @@
+#!/bin/sh
+if [ "$(uname -n)" = "am" ]
+then
+	COMMAND='echo $(bat) $(date +%a-%Y-%m-%d-%H%M)'
+elif [ "$(uname -n)" = "euclid" ]
+	COMMAND='echo $(date +%a-%Y-%m-%d-%H%M)'
+fi
+xsetroot -name "$(eval $COMMAND)"
+while [ $(date +%S) -ne 0 ]
+do
+	sleep 1
+done
+while true
+do
+	xsetroot -name "$(eval $COMMAND)"
+	sleep 60
+done
