@@ -5,6 +5,13 @@ echo -n " - Bringing down wlan0..."
 ifconfig wlan0 down 2>/dev/null
 echo "done."
 
+if [ "$(uname -n)" = "am" ] && lsmod | grep -q "^iwlwifi$"
+then
+	echo -n " - Removing wireless drivers"
+	rmmod iwlwifi
+	echo "done."
+fi
+
 if ps ax|awk '{print$5}'|grep 'wpa_supplicant' >/dev/null; then
 	echo -n " - Killing wpa_supplicant... "
 	if pkill wpa_supplicant; then

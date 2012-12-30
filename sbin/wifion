@@ -8,6 +8,13 @@ fi
 
 echo "* Connecting to the internet... "
 
+if [ "$(uname -n)" = "am" ] && ! lsmod | grep -q "^iwlwifi$"
+then
+	echo -n " - Loading wireless drivers"
+	modprobe iwlwifi
+	echo "done."
+fi
+
 if ps ax|awk '{print$5}'|grep -q 'wpa_supplicant'
 then
 	echo -n " - Killing previous wpa_supplicant... "
