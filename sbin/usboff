@@ -1,9 +1,13 @@
 #!/bin/sh
 echo -n "* Disabling usb... "
-rmmod usb_storage 2>/dev/null
-rmmod usb_libusual 2>/dev/null
-rmmod uhci_hcd 2>/dev/null
-rmmod ehci_hcd 2>/dev/null
-umount /proc/bus/usb 2>/dev/null
-rmmod usbcore 2>/dev/null
+if [ "$(uname -n)" = "am" ]
+then
+	#umount /proc/bus/usb
+	rmmod usb_storage
+	rmmod xhci_hcd
+	rmmod uhci_hcd
+	rmmod ehci_hcd
+	rmmod usbcore
+	rmmod usb_common
+fi
 echo "done."

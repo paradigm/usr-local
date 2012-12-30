@@ -1,14 +1,15 @@
 #!/bin/sh
 echo -n "* Disabling sound... "
-rmmod snd_hda_intel
-rmmod snd_hda_codec_realtek
-rmmod snd_hda_codec
-rmmod snd_hwdep
-rmmod snd_pcm
-rmmod snd_page_alloc
-rmmod snd_seq
-rmmod snd_timer
-rmmod snd_seq_device
-rmmod snd
-rmmod soundcore
+if [ "$(uname -n)" = "am" ]
+then
+	modprobe snd_hda_codec_hdmi
+	modprobe snd_hda_codec_realtek
+	modprobe snd_hda_intel
+	modprobe snd_hwdep
+	modprobe snd_pcm
+	modprobe snd_page_alloc
+	modprobe snd_timer
+	modprobe snd
+	modprobe soundcore
+fi
 echo "done."
