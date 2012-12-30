@@ -1,11 +1,14 @@
 #!/bin/sh
-if [ "$(uname -n)" = "am" ]
+COMMAND='echo'
+if which upcoming >/dev/null && [ -r ~/.upcoming/upcoming ]
 then
-	COMMAND='echo $(upcoming ~/.upcoming) $(bat) $(date +%a-%Y-%m-%d-%H%M)'
-elif [ "$(uname -n)" = "euclid" ]
-then
-	COMMAND='echo $(upcoming ~/.upcoming) $(date +%a-%Y-%m-%d-%H%M)'
+	COMMAND=$COMMAND' $(upcoming ~/.upcoming/upcoming)'
 fi
+if [ "$(uname -n)" = "am" ] && which bat >/dev/null
+then
+	COMMAND=$COMMAND' $(bat)'
+fi
+COMMAND=$COMMAND' $(date +%a-%Y-%m-%d-%H%M)'
 xsetroot -name "$(eval $COMMAND)"
 while [ $(date +%S) -ne 0 ]
 do
