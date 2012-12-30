@@ -3,6 +3,7 @@ if [ "$(uname -n)" = "am" ]
 then
 	COMMAND='echo $(bat) $(date +%a-%Y-%m-%d-%H%M)'
 elif [ "$(uname -n)" = "euclid" ]
+then
 	COMMAND='echo $(date +%a-%Y-%m-%d-%H%M)'
 fi
 xsetroot -name "$(eval $COMMAND)"
