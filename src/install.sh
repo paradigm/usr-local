@@ -13,12 +13,12 @@ create_symlinks(){
 install_opt(){
 	if ls | grep -q "config.mk"
 	then
-		sed "s,PREFIX ?=.*,PREFIX = /opt/$package," config.mk > config.mk2
+		sed "s,^PREFIX \?=.*,PREFIX = /opt/$package," config.mk > config.mk2
 		mv config.mk2 config.mk
 	else
-		sed "s,PREFIX ?=.*,PREFIX = /opt/$package," Makefile > Makefile2
+		sed "s,^PREFIX \?=.*,PREFIX = /opt/$package," Makefile > Makefile2
 		mv Makefile2 Makefile
-		sed "s,prefix ?=.*,prefix = /opt/$package," Makefile > Makefile2
+		sed "s,^prefix \??\?=.*,prefix = /opt/$package," Makefile > Makefile2
 		mv Makefile2 Makefile
 	fi
 }
@@ -27,8 +27,7 @@ clean_up(){
 	git reset --hard
 }
 
-
-for cmd in "install_opt" "make clean" "make" "sudo make install" "create_symlinks" "clean_up"
+for cmd in "clean_up" "install_opt" "make" "sudo make install" "create_symlinks" "clean_up"
 do
 	for package in $packages
 	do
