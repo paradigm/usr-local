@@ -16,3 +16,6 @@
 [submodule "src/xcape"]
 	path = src/xcape
 	url = https://github.com/alols/xcape.git
+[submodule "src/sxiv"]
+	path = src/sxiv
+	url = git@github.com:paradigm/sxiv.git
