@@ -16,3 +16,6 @@
 [submodule "src/swarp"]
 	path = src/swarp
 	url = git://git.suckless.org/swarp
+[submodule "src/xcape"]
+	path = src/xcape
+	url = https://github.com/alols/xcape.git
