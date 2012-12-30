@@ -1,0 +1,9 @@
+#!/bin/sh
+echo -n "* Disabling usb... "
+rmmod usb_storage 2>/dev/null
+rmmod usb_libusual 2>/dev/null
+rmmod uhci_hcd 2>/dev/null
+rmmod ehci_hcd 2>/dev/null
+umount /proc/bus/usb 2>/dev/null
+rmmod usbcore 2>/dev/null
+echo "done."

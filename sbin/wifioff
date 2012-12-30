@@ -1,0 +1,27 @@
+#!/bin/sh
+echo "* Disabling wifi... "
+
+echo -n " - Bringing down wlan0..."
+ifconfig wlan0 down 2>/dev/null
+echo "done."
+
+if ps ax|awk '{print$5}'|grep 'wpa_supplicant' >/dev/null; then
+	echo -n " - Killing wpa_supplicant... "
+	if pkill wpa_supplicant; then
+		echo "done."
+	else
+		echo "FAILED!"
+		exit 1
+	fi
+fi
+if ps ax|awk '{print$5}'|grep 'dhclient' >/dev/null; then
+	echo -n " - Killing dhclient... "
+	if pkill dhclient; then
+		echo "done."
+	else
+		echo "FAILED!"
+		exit 1
+	fi
+fi
+
+echo "+ Disabled."

@@ -1,0 +1,14 @@
+#!/bin/sh
+echo -n "* Disabling sound... "
+rmmod snd_hda_intel
+rmmod snd_hda_codec_realtek
+rmmod snd_hda_codec
+rmmod snd_hwdep
+rmmod snd_pcm
+rmmod snd_page_alloc
+rmmod snd_seq
+rmmod snd_timer
+rmmod snd_seq_device
+rmmod snd
+rmmod soundcore
+echo "done."
