@@ -4,6 +4,11 @@
 # use alsa for sound
 export SDL_AUDIODRIVER=ALSA
 
+if [ "$(uname -n)" = "am" ]
+then
+	export MESA_EXTENSION_OVERRIDE='GL_EXT_texture_filter_anisotropic'
+fi
+
 pkill xcape
 steam
 
