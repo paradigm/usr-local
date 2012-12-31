@@ -9,7 +9,7 @@ BEGIN{
 	output=""
 	"uname -n" | getline hostname
 	if(hostname = "am")
-		output_length = 125
+		output_length = 150
 	else
 		output_length = 300
 }
@@ -57,10 +57,24 @@ BEGIN{
 			days += 31
 	}
 	days += (item_day - current_day)
-	get_day_of_week="date --date="$1" +%a"
+	get_day_of_week="date --date="$1" +%w"
 	get_day_of_week | getline day_of_week
+	if(day_of_week == 0)
+		day_of_week = "S"
+	else if(day_of_week == 1)
+		day_of_week = "M"
+	else if(day_of_week == 2)
+		day_of_week = "T"
+	else if(day_of_week == 3)
+		day_of_week = "W"
+	else if(day_of_week == 4)
+		day_of_week = "R"
+	else if(day_of_week == 5)
+		day_of_week = "F"
+	else if(day_of_week == 6)
+		day_of_week = "T"
 	close(get_day_of_week)
-	output = output  substr($0,12) " ("days"/"day_of_week"-"item_month"-"item_day") | "
+	output = output  substr($0,12) " "days""day_of_week""item_month""item_day"  "
 }
 END{
 	printf substr(output,1,output_length)
