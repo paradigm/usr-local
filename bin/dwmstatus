@@ -4,6 +4,10 @@ if which upcoming >/dev/null && [ -r ~/.upcoming/upcoming ]
 then
 	COMMAND=$COMMAND' $(upcoming ~/.upcoming/upcoming)'
 fi
+if [ "$(uname -n)" = "am" ] && [ -r /sys/devices/platform/thinkpad_hwmon/fan1_input ]
+then
+	COMMAND=$COMMAND' $(cat /sys/devices/platform/thinkpad_hwmon/fan1_input)'
+fi
 if [ "$(uname -n)" = "am" ] && which bat >/dev/null
 then
 	COMMAND=$COMMAND' $(bat)'
