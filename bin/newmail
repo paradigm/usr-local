@@ -37,9 +37,12 @@ for line in file.readlines():
 file.close()
 
 while True:
+    print ""
+    print "Checking for new mail at ",
+    print time.strftime("%a-%Y-%m-%d-%H%M",time.localtime())
     newmail = 0
     for account in accounts:
-        print "Checking "+account[0]+"..."
+        print account[0]+"..."
         conn = imaplib.IMAP4_SSL(account[1], 993)
         conn.login(account[2], account[3])
         newmail += int(re.search("UNSEEN (\d+)", conn.status("INBOX", "(UNSEEN)")[1][0]).group(1))
