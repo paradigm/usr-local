@@ -51,4 +51,5 @@ while True:
     file = open('/dev/shm/.paradigm-newmail','w')
     file.write(str(newmail))
     file.close()
-    time.sleep(60*60) # sleep one hour
+    # sleep until the next hour
+    time.sleep((60 - time.localtime()[4])*60-(time.localtime()[5]))
