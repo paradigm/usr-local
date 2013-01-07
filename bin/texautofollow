@@ -16,6 +16,8 @@ echo "Watching for changes and following cursor"
 compile_loop(){
 	while inotifywait $infile 1>/dev/null 2>/dev/null
 	do
+		# wait for write to finish
+		sleep 1
 		printf " Compiling...\r"
 		if lualatex -interaction=nonstopmode $infile -synctex=1 > texautofollow-error-output
 		then
