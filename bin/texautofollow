@@ -22,7 +22,11 @@ compile_loop(){
 		if lualatex -interaction=nonstopmode $infile -synctex=1 > texautofollow-error-output
 		then
 			printf " Okay         \r"
-			pkill -HUP mupdf
+			window=$(xwininfo -root -children | awk '/'$outfile'/{print$1}')
+			if [ -n "$window" ]
+			then
+				xdotool type --window $window "r"
+			fi
 		else
 			printf " Error         \r"
 			awk 'substr($0,1,1)=="!"{x=1}x==1{print$0}' texautofollow-error-output > texautofollow-error-output-filtered
@@ -51,7 +55,7 @@ follow_cursor(){
 		if [ "$current" != "$previous" ] && [ ! -f texautofollow-error ]
 		then
 			page=$(synctex view -i $current:$infile -o $outfile | awk -F: '/^Page:[0-9]/{print$2;exit}')
-			window=$(xwininfo -root -children | awk '/mupdf/{print$1}')
+			window=$(xwininfo -root -children | awk '/'$outfile'/{print$1}')
 			xdotool type --window $window "${page}g"
 		fi
 	done
