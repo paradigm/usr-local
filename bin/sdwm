@@ -14,5 +14,5 @@ then
 		kill $(pidof compiz)
 		sleep 2
 	fi
-	dwm
+	exec dwm
 fi
