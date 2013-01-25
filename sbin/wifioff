@@ -8,6 +8,7 @@ echo "done."
 if [ "$(uname -n)" = "am" ] && lsmod | grep -q "^iwlwifi$"
 then
 	echo -n " - Removing wireless drivers"
+	rmmod iwlvm
 	rmmod iwlwifi
 	echo "done."
 fi
