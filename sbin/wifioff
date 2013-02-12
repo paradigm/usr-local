@@ -24,7 +24,7 @@ echo -n " - Bringing down wlan0..."
 ifconfig wlan0 down 2>/dev/null
 echo "done."
 
-if [ "$(uname -n)" = "am" ] && lsmod | grep -q "^iwlwifi$"
+if [ "$(uname -n)" = "am" ] && lsmod | grep -q "iwlwifi"
 then
 	echo -n " - Removing wireless drivers"
 	rmmod iwlvm
