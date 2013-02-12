@@ -11,6 +11,7 @@ echo "* Connecting to the internet... "
 if [ "$(uname -n)" = "am" ] && ! lsmod | grep -q "^iwlwifi$"
 then
 	echo -n " - Loading wireless drivers"
+	modprobe iwldvm
 	modprobe iwlwifi
 	echo "done."
 fi
