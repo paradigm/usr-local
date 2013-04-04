@@ -2,14 +2,25 @@
 echo -n "* Disabling sound... "
 if [ "$(uname -n)" = "am" ]
 then
-	modprobe snd_hda_codec_hdmi
-	modprobe snd_hda_codec_realtek
-	modprobe snd_hda_intel
-	modprobe snd_hwdep
-	modprobe snd_pcm
-	modprobe snd_page_alloc
-	modprobe snd_timer
-	modprobe snd
-	modprobe soundcore
+	# thinkpad_acpi seems to snd - kill that first, then kill the audio items,
+	# then get it back
+	modprobe -r thinkpad_acpi
+	modprobe -r snd_hda_intel
+	modprobe -r snd_hda_codec_realtek
+	modprobe -r snd_hda_codec_hdmi
+	modprobe -r snd
+
+	# the following seem to go away on their own when I remove snd
+#	#modprobe -r snd_hwdep
+#	modprobe -r snd_hda_codec
+#	modprobe -r snd_timer
+#	modprobe -r snd_page_alloc
+#	modprobe -r snd_pcm
+#	modprobe -r soundcore
+
+	# get back thinkpad_acpi
+	# this re-gets snd and soundcore - I don't think I can have thinkpad_acpi
+	# without it.
+	modprobe thinkpad_acpi
 fi
 echo "done."

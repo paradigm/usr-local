@@ -7,7 +7,7 @@ then
 	modprobe snd_timer
 	modprobe snd_page_alloc
 	modprobe snd_pcm
-	modprobe snd_hwdep
+#	modprobe snd_hwdep
 	modprobe snd_hda_intel
 	modprobe snd_hda_codec_realtek
 	modprobe snd_hda_codec_hdmi
