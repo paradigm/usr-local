@@ -16,7 +16,7 @@ steam
 xsetroot -cursor_name left_ptr
 
 rm /dev/shm/org.chromium.Chromium.shmem.libcef_*
-rm /dev/shm/Shm_*
-rm /dev/shm/ValveIPCSharedObjects*
+rm /dev/shm/$(whoami)-Shm_*
+rm /dev/shm/$(whoami)-ValveIPCSharedObjects*
 
 xcape &
