@@ -8,17 +8,25 @@ BEGIN{
 	close("date +%d")
 	output=""
 	"uname -n" | getline hostname
-	if(hostname = "am")
+	if(hostname = "am"){
 		output_length = 150
-	else
+		max_item_count = 4
+	} else {
 		output_length = 300
+		max_item_count = 6
+	}
+	get_section_count = "grep -c '^\[' "ARGV[1]
+	get_section_count | getline section_count;
+	close(get_section_count)
+	items_per_section = int(max_item_count / section_count)
 }
+
 /^\[/{
 	used_section=0
 	section=substr($0,2,length($0)-2)
 }
-! /^\[/ && ! /^#/ && ! /^$/ && used_section==0{
-	used_section=1
+! /^\[/ && ! /^#/ && ! /^$/ && used_section < items_per_section{
+	used_section += 1
 	item_year = substr($0,1,4)
 	item_month = substr($0,6,2)
 	item_day = substr($0,9,2)
