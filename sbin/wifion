@@ -91,6 +91,11 @@ else
 	echo "FAILED!"
 	exit 1
 fi
+
+echo -n " - Fixing Bedrock /etc/resolv.conf nonsense"
+cp /etc/resolv.conf.dhclient-new /etc/resolv.conf
+
+
 echo -n " - Testing network connection..."
 if ping -c 1 www.example.com 1>/dev/null; then
 	echo "done."
