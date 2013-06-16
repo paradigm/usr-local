@@ -9,7 +9,8 @@ then
 	COMMAND=$COMMAND' $(cat /sys/devices/platform/thinkpad_hwmon/fan1_input)'
 fi
 COMMAND=$COMMAND' $(cat /dev/shm/.$(whoami)-newmail 2>/dev/null)'
-if [ "$(uname -n)" = "am" ] && which bat >/dev/null
+
+if [ -d /sys/class/power_supply/BAT0 ] && which bat >/dev/null
 then
 	COMMAND=$COMMAND' $(bat)'
 fi
