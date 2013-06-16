@@ -71,13 +71,13 @@ echo "done."
 
 START_TIME=$(date +%s)
 echo -n " - Waiting for association with access point"
-while ! grep '^Associated with [0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' 1>/dev/null /etc/wpa_supplicant/wpa_supplicant.log && [ "$(expr $(date +%s) - $START_TIME)" -lt 10 ]; do
+while ! grep 'Associated with [0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' 1>/dev/null /etc/wpa_supplicant/wpa_supplicant.log && [ "$(expr $(date +%s) - $START_TIME)" -lt 10 ]; do
 	echo -n "."
 	sleep .2s
 done
 echo " done."
 
-if ! grep '^Associated with [0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' 1>/dev/null /etc/wpa_supplicant/wpa_supplicant.log
+if ! grep 'Associated with [0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]:[0-9a-f][0-9a-f]' 1>/dev/null /etc/wpa_supplicant/wpa_supplicant.log
 then
 	echo "Could not connect to WPA, aborting"
 	exit 1
