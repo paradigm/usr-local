@@ -1,0 +1,27 @@
+From 3c0e145a506a0e0cdca8a020e966dbf1716af9e3 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Sat, 29 Dec 2012 17:25:27 -0500
+Subject: [PATCH 04/10] removed font error printing
+
+---
+ dwm.c |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dwm.c b/dwm.c
+index 3b2faeb..b1ae565 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -1035,8 +1035,8 @@ initfont(const char *fontstr) {
+ 
+ 	dc.font.set = XCreateFontSet(dpy, fontstr, &missing, &n, &def);
+ 	if(missing) {
+-		while(n--)
+-			fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);
++//		while(n--)
++//			fprintf(stderr, "dwm: missing fontset: %s\n", missing[n]);
+ 		XFreeStringList(missing);
+ 	}
+ 	if(dc.font.set) {
+-- 
+1.7.2.5
+

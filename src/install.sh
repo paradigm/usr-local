@@ -32,18 +32,19 @@ fi
 echo "" > /tmp/usr-local-log
 
 clean(){
+	git clean -xdf
 	git reset --hard >/tmp/usr-local-log 2>&1
 }
 
-patch(){
+apply_patch(){
 	if [ -d /usr/local/patches/$package ]
 	then
 		echo "found patches"
-		cd /usr/local/patches/$package
-		for patch in *
+		for patch in /usr/local/patches/$package/*
 		do
-			echo -n "Patching with $patch..."
-			if patch -p1 < $patch >>/tmp/usr-local-log 2>&1
+			echo -n "  Patching with $patch...  "
+			patch -p1 < $patch >/tmp/usr-local-log 2>&1
+			if [ $? -eq 0 ]
 			then
 				echo "okay"
 			else
@@ -141,17 +142,15 @@ make_symlinks(){
 }
 
 configure(){
-	if [ -d /usr/local/configuration_scripts/$package ]
+	if [ -d /usr/local/configure_flags/$package ]
 	then
-		echo "found configuration scripts"
-		cd /usr/local/configuration_scripts/$package
-		for script in *
+		echo "found configure_flags"
+		for flags in /usr/local/configure_flags/$package/*
 		do
-			echo -n "Running $script..."
-			if ./script >>/tmp/usr-local-log 2>&1
+			echo "Running configure with flags:"
+			cat $flags
+			if ! ./configure $(cat $flags) >>/tmp/usr-local-log 2>&1
 			then
-				echo "okay"
-			else
 				echo "FAILURE"
 				echo "Try grepping through /tmp/usr-local-log"
 				exit 1
@@ -160,7 +159,13 @@ configure(){
 	fi
 }
 
-for cmd in "clean" "patch" "force_install_opt" "configure" "make_and_install_deps" "make_install" "make_symlinks" "clean"
+fix_permissions(){
+	cd /opt/$package/
+	sudo chmod a+rx /opt/$package/
+	sudo find . -perm -u+x -exec chmod a+x {} \; && sudo find . -perm -u+r -exec chmod a+r {} \;
+}
+
+for cmd in "clean" "apply_patch" "force_install_opt" "configure" "make_and_install_deps" "make_install" "fix_permissions" "make_symlinks"
 do
 	for package in $packages
 	do

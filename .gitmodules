@@ -9,7 +9,7 @@
 	url = git://git.suckless.org/dmenu
 [submodule "src/dwm"]
 	path = src/dwm
-	url = git@github.com:paradigm/dwm.git
+	url = git://git.suckless.org/dwm
 [submodule "src/swarp"]
 	path = src/swarp
 	url = git://git.suckless.org/swarp

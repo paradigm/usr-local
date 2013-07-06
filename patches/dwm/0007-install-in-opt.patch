@@ -1,0 +1,25 @@
+From 0392a4cfb040d808b41c29dc9ed1dae5610d9f78 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Sat, 29 Dec 2012 17:38:21 -0500
+Subject: [PATCH 07/10] install in /opt
+
+---
+ config.mk |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/config.mk b/config.mk
+index 484554a..1b9851c 100644
+--- a/config.mk
++++ b/config.mk
+@@ -4,7 +4,7 @@ VERSION = 6.0
+ # Customize below to fit your system
+ 
+ # paths
+-PREFIX = /usr/local
++PREFIX = /opt/dwm
+ MANPREFIX = ${PREFIX}/share/man
+ 
+ X11INC = /usr/X11R6/include
+-- 
+1.7.2.5
+

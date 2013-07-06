@@ -1,0 +1,24 @@
+From bacd18d5a323b0140cd43b9297f0c57c6b4175b5 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Sat, 29 Dec 2012 18:30:12 -0500
+Subject: [PATCH 08/10] touched readme a bit
+
+---
+ README |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/README b/README
+index 7abf1cf..af14ec9 100644
+--- a/README
++++ b/README
+@@ -1,3 +1,7 @@
++This is paradigm's fork of dwm.  I mostly just added some patches and changed
++the config a bit and wanted to track my changes via git.
++
++
+ dwm - dynamic window manager
+ ============================
+ dwm is an extremely fast, small, and dynamic window manager for X.
+-- 
+1.7.2.5
+

@@ -1,0 +1,27 @@
+From 24814e9de452c3c381e3fd1e0f5fcc8c9ba60ad1 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Fri, 4 Jan 2013 07:56:01 -0500
+Subject: [PATCH 09/10] dwm: switched back to firefox
+
+---
+ config.h |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/config.h b/config.h
+index fe86efa..43010e9 100644
+--- a/config.h
++++ b/config.h
+@@ -51,8 +51,8 @@ static const Layout layouts[] = {
+ /* commands */
+ static const char *dmenucmd[] = { "dmenu_run", "-fn", font, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbgcolor, "-sf", selfgcolor, NULL };
+ static const char *termcmd[]  = { "uxterm", NULL };
+-//static const char *browsercmd[]  = { "firefox", NULL };
+-static const char *browsercmd[]  = { "dwb", NULL };
++static const char *browsercmd[]  = { "firefox", NULL };
++//static const char *browsercmd[]  = { "dwb", NULL };
+ static const char *sdwmcmd[]  = { "sdwm", NULL };
+ static const char *sopenboxcmd[]  = { "sopenbox", NULL };
+ static const char *scompizcmd[]  = { "scompiz", NULL };
+-- 
+1.7.2.5
+

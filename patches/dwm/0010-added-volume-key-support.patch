@@ -1,0 +1,33 @@
+From 87719c06968065599a237085ae3fb086926477d9 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Sun, 17 Mar 2013 21:14:22 -0400
+Subject: [PATCH 10/10] added volume key support
+
+---
+ config.h |    4 ++++
+ 1 files changed, 4 insertions(+), 0 deletions(-)
+
+diff --git a/config.h b/config.h
+index 43010e9..33b0ced 100644
+--- a/config.h
++++ b/config.h
+@@ -1,5 +1,6 @@
+ /* See LICENSE file for copyright and license details. */
+ 
++#include <X11/XF86keysym.h> /* XFree volume keys */
+ #include "push.c"
+ 
+ /* appearance */
+@@ -81,6 +82,9 @@ static Key keys[] = {
+ 	{ ControlMask|ShiftMask,        XK_Down,   spawn,          {.v = vdowncmd } },
+ 	{ ControlMask|ShiftMask,        XK_Up,     spawn,          {.v = vupcmd } },
+ 	{ ControlMask|ShiftMask,        XK_Left,   spawn,          {.v = vmutecmd } },
++	{ NULL,               XF86XK_AudioLowerVolume, spawn,          {.v = vdowncmd } },
++	{ NULL,               XF86XK_AudioRaiseVolume, spawn,          {.v = vupcmd } },
++	{ NULL,               XF86XK_AudioMute,        spawn,          {.v = vmutecmd } },
+ 	{ ControlMask|ShiftMask,        XK_Right,  spawn,          {.v = vmaxcmd } },
+ 	// music shortcuts
+ 	{ ControlMask|ShiftMask,        XK_y,      spawn,          {.v = mopencmd } },
+-- 
+1.7.2.5
+

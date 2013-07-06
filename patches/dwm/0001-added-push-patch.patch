@@ -1,0 +1,150 @@
+From 4dc9193b5c455d23965f7dd1af52ae6b576e42b5 Mon Sep 17 00:00:00 2001
+From: paradigm <paradigm@bedrocklinux.org>
+Date: Sat, 29 Dec 2012 17:16:55 -0500
+Subject: [PATCH 01/10] added push patch
+
+---
+ dwm-6.0-push.diff |   65 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+ push.c            |   58 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 0 deletions(-)
+ create mode 100644 dwm-6.0-push.diff
+ create mode 100644 push.c
+
+diff --git a/dwm-6.0-push.diff b/dwm-6.0-push.diff
+new file mode 100644
+index 0000000..676a6e3
+--- /dev/null
++++ b/dwm-6.0-push.diff
+@@ -0,0 +1,65 @@
++URL: http://dwm.suckless.org/patches/push
++pushup and pushdown provide a way to move clients inside the clients list.
++
++diff -r ec4baab78314 push.c
++--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
+++++ b/push.c	Fri Apr 06 08:23:37 2012 +0200
++@@ -0,0 +1,58 @@
+++static Client *
+++prevtiled(Client *c) {
+++	Client *p, *r;
+++
+++	for(p = selmon->clients, r = NULL; p && p != c; p = p->next)
+++		if(!p->isfloating && ISVISIBLE(p))
+++			r = p;
+++	return r;
+++}
+++
+++static void
+++pushup(const Arg *arg) {
+++	Client *sel = selmon->sel;
+++	Client *c;
+++
+++	if(!sel || sel->isfloating)
+++		return;
+++	if((c = prevtiled(sel))) {
+++		/* attach before c */
+++		detach(sel);
+++		sel->next = c;
+++		if(selmon->clients == c)
+++			selmon->clients = sel;
+++		else {
+++			for(c = selmon->clients; c->next != sel->next; c = c->next);
+++			c->next = sel;
+++		}
+++	} else {
+++		/* move to the end */
+++		for(c = sel; c->next; c = c->next);
+++		detach(sel);
+++		sel->next = NULL;
+++		c->next = sel;
+++	}
+++	focus(sel);
+++	arrange(selmon);
+++}
+++
+++static void
+++pushdown(const Arg *arg) {
+++	Client *sel = selmon->sel;
+++	Client *c;
+++
+++	if(!sel || sel->isfloating)
+++		return;
+++	if((c = nexttiled(sel->next))) {
+++		/* attach after c */
+++		detach(sel);
+++		sel->next = c->next;
+++		c->next = sel;
+++	} else {
+++		/* move to the front */
+++		detach(sel);
+++		attach(sel);
+++	}
+++	focus(sel);
+++	arrange(selmon);
+++}
+diff --git a/push.c b/push.c
+new file mode 100644
+index 0000000..493613c
+--- /dev/null
++++ b/push.c
+@@ -0,0 +1,58 @@
++static Client *
++prevtiled(Client *c) {
++	Client *p, *r;
++
++	for(p = selmon->clients, r = NULL; p && p != c; p = p->next)
++		if(!p->isfloating && ISVISIBLE(p))
++			r = p;
++	return r;
++}
++
++static void
++pushup(const Arg *arg) {
++	Client *sel = selmon->sel;
++	Client *c;
++
++	if(!sel || sel->isfloating)
++		return;
++	if((c = prevtiled(sel))) {
++		/* attach before c */
++		detach(sel);
++		sel->next = c;
++		if(selmon->clients == c)
++			selmon->clients = sel;
++		else {
++			for(c = selmon->clients; c->next != sel->next; c = c->next);
++			c->next = sel;
++		}
++	} else {
++		/* move to the end */
++		for(c = sel; c->next; c = c->next);
++		detach(sel);
++		sel->next = NULL;
++		c->next = sel;
++	}
++	focus(sel);
++	arrange(selmon);
++}
++
++static void
++pushdown(const Arg *arg) {
++	Client *sel = selmon->sel;
++	Client *c;
++
++	if(!sel || sel->isfloating)
++		return;
++	if((c = nexttiled(sel->next))) {
++		/* attach after c */
++		detach(sel);
++		sel->next = c->next;
++		c->next = sel;
++	} else {
++		/* move to the front */
++		detach(sel);
++		attach(sel);
++	}
++	focus(sel);
++	arrange(selmon);
++}
+-- 
+1.7.2.5
+
