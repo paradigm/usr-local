@@ -19,3 +19,6 @@
 [submodule "src/sxiv"]
 	path = src/sxiv
 	url = git@github.com:paradigm/sxiv.git
+[submodule "src/git-hg"]
+	path = src/git-hg
+	url = https://github.com/cosmin/git-hg.git
