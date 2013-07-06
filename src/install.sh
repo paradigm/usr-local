@@ -1,21 +1,67 @@
 #!/bin/sh
 starting_directory=$(pwd)
-packages=$(ls | grep -v install.sh | grep -v uninstall.sh)
 
-create_symlinks(){
-	sudo find /opt/$package -perm -u+x -exec chmod a+x {} \; && sudo find /opt/$package -perm -u+r -exec chmod a+r {} \;
-	for binary in /opt/$package/bin/*
+if [ $# -eq 0 ]
+then
+	packages=""
+	cd /usr/local/src/
+	for file in *
 	do
-		sudo ln -sf $binary /usr/local/bin/
+		cd $starting_directory
+		# ensure a directory, not a script like this file
+		if [ -d $file ]
+		then
+			cd $file
+			# ensure a git repo so we don't blow away something with git --reset
+			# later
+			if [ $(git rev-parse --show-toplevel) = $(pwd) ]
+			then
+				if [ -z "$packages" ]
+				then
+					packages="$file"
+				else
+					packages="$packages $file"
+				fi
+			fi
+		fi
 	done
+else
+	packages="$@"
+fi
+
+echo "" > /tmp/usr-local-log
+
+clean(){
+	git reset --hard >/tmp/usr-local-log 2>&1
 }
 
-install_opt(){
-	if ls | grep -q "config.mk"
+patch(){
+	if [ -d /usr/local/patches/$package ]
+	then
+		echo "found patches"
+		cd /usr/local/patches/$package
+		for patch in *
+		do
+			echo -n "Patching with $patch..."
+			if patch -p1 < $patch >>/tmp/usr-local-log 2>&1
+			then
+				echo "okay"
+			else
+				echo "FAILURE"
+				echo "Try grepping through /tmp/usr-local-log"
+				exit 1
+			fi
+		done
+	fi
+}
+
+force_install_opt(){
+	if ls | grep -q "^config.mk$"
 	then
 		sed "s,^PREFIX *=.*,PREFIX = /opt/$package," config.mk > config.mk2
 		mv config.mk2 config.mk
-	else
+	elif ls | grep -q "^Makefile$"
+	then
 		sed "s,^PREFIX *=.*,PREFIX = /opt/$package," Makefile > Makefile2
 		mv Makefile2 Makefile
 		sed "s,^prefix *?\?=.*,prefix = /opt/$package," Makefile > Makefile2
@@ -23,24 +69,111 @@ install_opt(){
 	fi
 }
 
-clean_up(){
-	git reset --hard
+make_and_install_deps(){
+	previous_source=""
+	while /bin/true
+	do
+		make >/tmp/usr-local-log-make 2>&1
+		if [ $? -eq 0 ]
+		then
+			return
+		fi
+		if grep -q "No such file or directory" /tmp/usr-local-log-make
+		then
+			for missing_file in $(awk -F: '/No such file or directory/{print$5}' /tmp/usr-local-log-make)
+			do
+				echo "missing file: $missing_file"
+				echo "finding package..."
+				if which apt-file >/dev/null 2>&1
+				then
+					sources=$(apt-file search "$missing_file" | grep "$missing_file$" | grep -- "-dev: " | awk -F":" '{print$1}')
+					if [ "$previous_source" = "$sources" ]
+					then
+						echo "FAILED"
+						echo "Already tried to install $sources"
+						exit 1
+					fi
+					if [ $(echo $sources | wc -l) -gt 1 ]
+					then
+						echo "FAILED"
+						echo "To many possible sources, aborting"
+						echo "Possible sources:"
+						echo "$sources"
+						exit 1
+					fi
+					echo -n "Found, installing..."
+					sudo apt-get install $sources
+					if [ $? -ne 0 ]
+					then
+						echo "FAILED"
+						echo "Could not automatically search for file, aborting"
+						exit 1
+					fi
+				else
+					echo "FAILED"
+					echo "Could not automatically search for file, aborting"
+					exit 1
+				fi
+			done
+		else
+			echo "FAILED"
+			echo "make failed for some reason"
+			exit 1
+		fi
+	done
 }
 
-for cmd in "clean_up" "install_opt" "make" "sudo make install" "create_symlinks" "clean_up"
+make_install(){
+	sudo make install >>/tmp/usr-local-log 2>&1
+}
+
+make_symlinks(){
+	cd /opt/$package/bin
+	for file in *
+	do
+		sudo ln -s /opt/$package/bin/$file /usr/local/bin/$file
+		if [ $? -ne 0 ]
+		then
+			echo "FAILED"
+			exit
+		fi
+	done
+}
+
+configure(){
+	if [ -d /usr/local/patches/$package ]
+	then
+		echo "found configuration scripts"
+		cd /usr/local/configuration_scripts/$package
+		for script in *
+		do
+			echo -n "Running $script..."
+			if ./script >>/tmp/usr-local-log 2>&1
+			then
+				echo "okay"
+			else
+				echo "FAILURE"
+				echo "Try grepping through /tmp/usr-local-log"
+				exit 1
+			fi
+		done
+	fi
+}
+
+for cmd in "clean" "patch" "force_install_opt" "configure" "make_and_install_deps" "make_install" "make_symlinks" "clean"
 do
 	for package in $packages
 	do
-		echo ""
-		echo "running: $cmd for $package"
-		echo ""
+		echo -n "Running $cmd for $package... "
 		cd $starting_directory
 		cd $package
 		eval $cmd
 		if [ $? -ne 0 ]
 		then
-			echo "$cmd $package failed"
+			echo "FAILURE"
 			exit 1
 		fi
+		echo "okay"
 	done
 done
+echo "Done!"
