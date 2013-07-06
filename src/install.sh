@@ -141,7 +141,7 @@ make_symlinks(){
 }
 
 configure(){
-	if [ -d /usr/local/patches/$package ]
+	if [ -d /usr/local/configuration_scripts/$package ]
 	then
 		echo "found configuration scripts"
 		cd /usr/local/configuration_scripts/$package
