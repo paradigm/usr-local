@@ -1,0 +1,1 @@
+--prefix=/opt/vim --with-features=huge --with-x --with-python-config-dir=/usr/lib/python2.6/config --enable-pythoninterp=yes --enable-gui=yes --enable-option-checking
