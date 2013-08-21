@@ -19,13 +19,17 @@ compile_loop(){
 		# wait for write to finish
 		sleep 1
 		printf " Compiling...\r"
-		if lualatex -interaction=nonstopmode $infile -synctex=1 > texautofollow-error-output
+		if lualatex -interaction=nonstopmode -synctex=1 $infile > texautofollow-error-output
 		then
 			printf " Okay         \r"
 			window=$(xwininfo -root -children | awk '/'$outfile'/{print$1}')
 			if [ -n "$window" ]
 			then
 				xdotool type --window $window "r"
+			fi
+			if [ -f texautofollow-error ]
+			then
+				rm texautofollow-error
 			fi
 		else
 			printf " Error         \r"
@@ -54,7 +58,8 @@ follow_cursor(){
 		current=$(vim --servername "tex" --remote-expr 'line(".").":".col(".")')
 		if [ "$current" != "$previous" ] && [ ! -f texautofollow-error ]
 		then
-			page=$(synctex view -i $current:$infile -o $outfile | awk -F: '/^Page:[0-9]/{print$2;exit}')
+			previous="$current"
+			page=$(synctex view -i $current:./$infile -o $outfile | awk -F: '/^Page:[0-9]/{print$2;exit}')
 			window=$(xwininfo -root -children | awk '/'$outfile'/{print$1}')
 			xdotool type --window $window "${page}g"
 		fi
