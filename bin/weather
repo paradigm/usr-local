@@ -1,0 +1,36 @@
+#!/bin/sh
+if [ -z "$WOEID" ]
+then
+	exit
+fi
+while true
+do
+	curl "http://weather.yahooapis.com/forecastrss?w=$WOEID" 2>/dev/null | awk '
+	BEGIN {
+		RS="[<>]"
+		FS="[\" ]"
+	}
+	$1 == "yweather:forecast" {
+		for(i=1;i<=NF;i++) {
+			if ($i == "low=")
+				low=$(i+1)
+			if ($i == "high=")
+				high=$(i+1)
+			if ($i == "text=") {
+				text=""
+				for (j=(i+1); j<=NF && $j != "code="; j++)
+					text=text$j" "
+			}
+			sub(" *$","",text)
+		}
+		if (count == 0)
+			printf "%d/%d:%s|", low, high, text
+		else {
+			printf "%d/%d:%s ", low, high, text
+			exit
+		}
+		count = 1
+	}
+	' > /dev/shm/.$(whoami)-weather
+	sleep 3600
+done
