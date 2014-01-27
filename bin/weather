@@ -17,8 +17,12 @@ do
 	# get current information
 	$1 == "yweather:condition" {
 		for (i=1; i<=NF; i++) {
-			if ($i == "text=")
-				c_cond = $(i+1)
+			if ($i == "text=") {
+				c_cond=""
+				for (j=(i+1); j<=NF && $j != "code="; j++)
+					c_cond=c_cond$j" "
+			sub(" *$","",c_cond)
+			}
 			if ($i == "temp=")
 				c_temp = $(i+1)
 		}
