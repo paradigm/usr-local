@@ -7,7 +7,7 @@ BEGIN {
 	close(get_current_datetime)
 
 	# get number of characters available for output
-	get_width_px="xrandr | awk -F'x| +' '/\*/{print$2;exit}'"
+	get_width_px="xrandr | awk -F'x| +' '/[*]/{print$2;exit}'"
 	get_width_px | getline width_px;
 	close(get_width_px)
 	# current preferred font has characters as six pixels wide
