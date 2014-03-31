@@ -1,0 +1,53 @@
+#!/bin/sh
+if [ -z "$WOEID" ]
+then
+	exit
+fi
+while true
+do
+	# In case internet gives out, ensure we do not provide outdated
+	# information.
+	rm /dev/shm/out 2>/dev/null
+	# get weather info from yahoo, parse and output
+	curl "http://weather.yahooapis.com/forecastrss?w=$WOEID" 2>/dev/null | awk '
+	BEGIN {
+		RS="[<>]"
+		FS="[\" ]"
+	}
+	# get current information
+	$1 == "yweather:condition" {
+		for (i=1; i<=NF; i++) {
+			if ($i == "text=") {
+				c_cond=""
+				for (j=(i+1); j<=NF && $j != "code="; j++)
+					c_cond=c_cond$j" "
+			sub(" *$","",c_cond)
+			}
+			if ($i == "temp=")
+				c_temp = $(i+1)
+		}
+	}
+	# get todays and tomorrows forcast
+	$1 == "yweather:forecast" {
+		for (i=1;i<=NF;i++) {
+			if ($i == "low=")
+				low=$(i+1)
+			if ($i == "high=")
+				high=$(i+1)
+			if ($i == "text=") {
+				cond=""
+				for (j=(i+1); j<=NF && $j != "code="; j++)
+					cond=cond$j" "
+			}
+			sub(" *$","",cond)
+		}
+		if (count == 0)
+			printf "%d/%d/%d:%s|%s ", low, c_temp, high, c_cond, cond
+		else {
+			printf "%d/%d:%s ", low, high, cond
+			exit
+		}
+		count = 1
+	} ' > /dev/shm/.$(whoami)-weather
+	sleep 3600
+done
