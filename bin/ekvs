@@ -207,7 +207,7 @@ abort_if_key_exists() {
 }
 
 abort_if_multiple_matches() {
-	[ "$(match_count "${key_re}")" -gt 1 ] && outerr "ERROR: Multiple matches, aborting."
+	[ "$(match_count "${key_re}")" -le 1 ] || outerr "ERROR: Multiple matches, aborting."
 }
 
 abort_if_no_matches() {
