@@ -436,8 +436,8 @@ such as an e-mail address to other users via /proc, and store this information
 in the shell variables.  This could be used, for example, by a new email
 notification tool.  Assumes gpg-agent is set so ekvs acts as a keyring.
 
-  imap_user=\$(echo "quiet get user@example.com-smtp-user" | ekvs)
-  imap_pass=\$(echo "quiet get user@example.com-smtp-pass" | ekvs)
+  imap_user=\$(echo "user@example.com-smtp-user" | ekvs quiet get)
+  imap_pass=\$(echo "user@example.com-smtp-pass" | ekvs quiet get)
 
 EOF
 }
