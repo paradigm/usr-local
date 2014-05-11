@@ -1,26 +1,42 @@
 #!/bin/sh
-COMMAND='echo'
-if which upcoming >/dev/null && [ -r ~/.upcoming/upcoming ]
-then
-	COMMAND=$COMMAND' $(upcoming ~/.upcoming/upcoming)'
-fi
-if [ "$(uname -n)" = "am" ] && [ -r /sys/devices/platform/thinkpad_hwmon/fan1_input ]
-then
-	COMMAND=$COMMAND' $(cat /sys/devices/platform/thinkpad_hwmon/fan1_input)'
-fi
-COMMAND=$COMMAND' $(cat /dev/shm/.$(whoami)-newmail 2>/dev/null)'
+
+cmd='echo '
+
+# upcoming events
+cmd=$cmd' $(pal --nocolor -c 0 -r 999 | awk -F"[- ]" "/^[^*]/{date=\$7\$1\$3\$4} /^\* !!/{print substr(\$0,7)\" \"date;exit}")'
+cmd=$cmd' $(pal --nocolor -c 0 -r 999 | awk -F"[- ]" "/^[^*]/{date=\$7\$1\$3\$4} /^\* --/{print substr(\$0,7)\" \"date;exit}")'
+cmd=$cmd' $(pal --nocolor -c 0 -r 999 | awk -F"[- ]" "/^[^*]/{date=\$7\$1\$3\$4} /^\* __/{print substr(\$0,7)\" \"date;exit}")'
+
+# weather
+cmd=$cmd' '
+cmd=$cmd'$(weather -q --headers="Sky conditions" | cut -d" " -f3-)/'
+cmd=$cmd'$(weather -q --headers="Weather" | cut -d" " -f2-)/'
+cmd=$cmd'$(weather -q --headers="Temperature" | cut -d" " -f2)F'
+
+# check for new email
+cmd=$cmd'$(ls ~/.mail/*/INBOX/new/ ~/.mail/*/Inbox/new/ | grep -q '^[^/]' && echo " new email")'
+
+# Battery info, if available
 if [ -d /sys/class/power_supply/BAT0 ] && which bat >/dev/null
 then
-	COMMAND=$COMMAND' $(bat)'
+	cmd=$cmd' $(bat)'
 fi
-COMMAND=$COMMAND' $(date +%a-%Y-%m-%d-%H%M)'
-xsetroot -name "$(eval $COMMAND)"
+
+# date
+cmd=$cmd' $(date +%a-%Y-%m-%d-%H%M)'
+
+# run now
+xsetroot -name "$(eval $cmd)"
+
+# wait until next minute mark (so clock minute is exactly right)
 while [ $(date +%S) -ne 0 ]
 do
 	sleep 1
 done
+
+# run every minute
 while true
 do
-	xsetroot -name "$(eval $COMMAND)"
+	xsetroot -name "$(eval $cmd)"
 	sleep 60
 done
