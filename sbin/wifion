@@ -39,7 +39,8 @@ fi
 
 echo -n " - Bringing up wireless interface... "
 sleep 1s
-WIRELESS_DEVICE=$(iwconfig 2>/dev/nulll | awk '/^wlan/{print$1;exit}')
+WIRELESS_DEVICE=$(iwconfig 2>/dev/nulll | awk '/^w/{print$1;exit}')
+echo "USING: $WIRELESS_DEVICE"
 ifconfig $WIRELESS_DEVICE up
 echo "done."
 
