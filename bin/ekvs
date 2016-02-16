@@ -581,7 +581,7 @@ do
 			# Ensure non-empty
 			[ -n "${value}" ] || outerr "No VALUE provided, aborting."
 			;;
-		"add"|"p")
+		"append"|"p")
 			if [ -n "${1:-""}" ]
 			then
 				key_re="${1}"
